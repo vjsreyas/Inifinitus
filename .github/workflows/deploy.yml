@@ -1,0 +1,57 @@
+name: Deploy Vite Project to Pages
+
+on:
+  # Triggers the workflow on pushes to the main branch
+  push:
+    branches: ["main"] 
+  
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # Required to deploy to GitHub Pages
+      id-token: write   # Required for OIDC authentication
+      contents: read    # Required to checkout the code
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use a stable Node version
+          cache: 'npm'
+          # Use package-lock.json inside the frontend folder for caching
+          cache-dependency-path: 'frontend/package-lock.json' 
+
+      # ➡️ STEP 1: Install dependencies and build the project 
+      # The 'working-directory' flag ensures these commands run inside 'frontend'
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+        working-directory: ./frontend 
+
+      # ➡️ STEP 2: Configure GitHub Pages
+      # The 'path' must point to the folder created by 'npm run build' (which is 'dist')
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      # ➡️ STEP 3: Upload the build output
+      # The final static files are in the 'dist' folder inside 'frontend'
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist 
+          
+      # ➡️ STEP 4: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
