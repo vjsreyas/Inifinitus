@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinitus - Automation Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#FF5A1F',
+                        'secondary': '#DC2626',
+                        'dark': '#0A0A0A',
+                        'darker': '#050505',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'sparkle': 'sparkle 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 5px #FF5A1F, 0 0 10px #FF5A1F, 0 0 15px #FF5A1F' },
+                            'to': { boxShadow: '0 0 10px #FF5A1F, 0 0 20px #FF5A1F, 0 0 30px #FF5A1F, 0 0 40px #DC2626' }
+                        },
+                        sparkle: {
+                            '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
+                            '50%': { opacity: 1, transform: 'scale(1.2)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0A0A0A;
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A0F0B 100%);
+        }
+        
+        .service-card {
+            background: #111111;
+            border: 1px solid #1F1F1F;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF5A1F;
+            box-shadow: 0 10px 25px -5px rgba(255, 90, 31, 0.2);
+        }
+        .infinity-logo {
+            position: relative;
+        }
+        .infinity-logo:before {
+            content: "∞";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        .neon-input {
+            background: #111111;
+            border: 1px solid #333333;
+            transition: all 0.3s ease;
+        }
+        .neon-input:focus {
+            border-color: #FF5A1F;
+            box-shadow: 0 0 5px #FF5A1F, 0 0 10px rgba(255, 90, 31, 0.5);
+            background: #151515;
+        }
+        .neon-button {
+            background: linear-gradient(135deg, #FF5A1F 0%, #DC2626 100%);
+            transition: all 0.3s ease;
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 10px #FF5A1F, 0 0 20px rgba(255, 90, 31, 0.5);
+        }
+        .neon-card {
+            background: #111111;
+            border: 1px solid #1F1F1F;
+            box-shadow: 0 0 10px rgba(255, 90, 31, 0.1);
+        }
+        .neon-card:hover {
+            box-shadow: 0 0 15px rgba(255, 90, 31, 0.2);
+        }
+        .glow-text {
+            text-shadow: 0 0 5px rgba(255, 90, 31, 0.7);
+        }
+        
+        /* Starry Night Background */
+        .starry-night {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        .infinity-star {
+        position: absolute;
+        color: #e6450b;          /* ← Change from white to your primary orange */
+        font-size: 16px;         /* ← Was 14px – bigger = sharper */
+        font-weight: 900;        /* ← Make it bold and crisp */
+        opacity: 0.4;            /* ← Was 0.1 – much more visible */
+        text-shadow: 
+        0 0 8px #FF5A1F,
+        0 0 16px #FF5A1F,
+        0 0 24px #DC2626;    /* ← Strong red-orange glow */
+        animation: sparkle 3s ease-in-out infinite;
+        }
+        
+        .infinity-star:nth-child(5n) { animation-delay: 0s; }
+        .infinity-star:nth-child(5n+1) { animation-delay: 0.6s; }
+        .infinity-star:nth-child(5n+2) { animation-delay: 1.2s; }
+        .infinity-star:nth-child(5n+3) { animation-delay: 1.8s; }
+        .infinity-star:nth-child(5n+4) { animation-delay: 2.4s; }
+        
+        .infinity-star:nth-child(7n) { color: #FF5A1F; }
+        .infinity-star:nth-child(11n) { color: #DC2626; }
+        .infinity-star:nth-child(13n) { color: #F97316; }
+        
+        .infinity-star:nth-child(3n) { font-size: 14px; }
+        .infinity-star:nth-child(7n) { font-size: 10px; }
+        .infinity-star:nth-child(11n) { font-size: 16px; }
+
+        /* Enhanced floating infinity symbols */
+        .infinity-float {
+        position: absolute;
+        font-size: 2rem;                     /* ← Was 1.5rem – bigger = much clearer */
+        font-weight: 900;                    /* ← Ultra bold */
+        color: #FF5A1F;                      /* ← Pure orange (or #DC2626 for red) */
+        opacity: 0;
+        pointer-events: none;
+        animation: 
+            floatUp 8s ease-in-out infinite,
+            glowPulse 3s ease-in-out infinite alternate,
+            fadeInOut 6s ease-in-out infinite;
+        text-shadow: 
+            0 0 10px #ffffff,                /* ← Small white core for sharpness */
+            0 0 20px #FF5A1F,
+            0 0 35px #FF5A1F,
+            0 0 50px #DC2626;                /* ← Strong red-orange halo */
+        z-index: 0;
+    }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes glowPulse {
+        from { 
+        text-shadow: 
+            0 0 10px #ffffff,
+            0 0 20px #FF5A1F,
+            0 0 35px #FF5A1F;
+        }
+        to { 
+        text-shadow: 
+            0 0 15px #ffffff,
+            0 0 30px #FF5A1F,
+            0 0 50px #FF5A1F,
+            0 0 70px #DC2626;
+        }
+}
+        
+       @keyframes fadeInOut {
+        0%, 100% { opacity: 0; }
+        15%, 85% { opacity: 0.85; }   /* ← Was 0.9 → slightly lower to avoid overexposure */
+    }
+
+        .infinity-float.orange { color: #FF5A1F; }
+        .infinity-float.red { color: #DC2626; }
+        .infinity-float.white { color: #FFFFFF; opacity: 0.4; }
+        .infinity-float.small { font-size: 0.9rem; }
+        .infinity-float.large { font-size: 1.8rem; }
+    </style>
+</head>
+<body class="font-sans bg-dark text-white">
+    <!-- Starry Night Background -->
+    <div class="starry-night" id="starryNight"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-darker/90 backdrop-blur-sm z-50 border-b border-gray-800">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary infinity-logo"></div>
+                <span class="text-xl font-bold text-white">Infinitus</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-400 hover:text-primary transition-colors">Home</a>
+                <a href="#services" class="text-gray-400 hover:text-primary transition-colors">Services</a>
+                <a href="#about" class="text-gray-400 hover:text-primary transition-colors">About</a>
+                <a href="#contact" class="text-gray-400 hover:text-primary transition-colors">Contact</a>
+            </div>
+            
+            <button class="neon-button text-white px-6 py-2 rounded-full font-medium">
+                Get Started
+            </button>
+        </div>
+    </nav>
+<!-- Hero Section -->
+<section id="home" class="pt-32 pb-20 md:pt-40 md:pb-32 gradient-bg min-h-screen flex items-center relative overflow-hidden">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+        <!-- Left: Text Content -->
+        <div class="text-center md:text-left">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                Hey, I’m <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary glow-text">V J</span>
+            </h1>
+
+            <p class="text-2xl md:text-3xl mt-6 text-gray-300 leading-relaxed">
+                19yo CSE student automating Instagram DMs to WhatsApp for D2C brands
+            </p>
+
+            <p class="text-3xl md:text-4xl font-bold text-primary mt-10">
+                ₹3,999 one-time setup • Delivered in 24 hrs
+            </p>
+
+            <div class="mt-16">
+                <a href="https://wa.me/919778277793" target="_blank" 
+                class="inline-flex items-center gap-5 px-12 py-7 rounded-full text-2xl md:text-3xl font-bold text-white
+                bg-gradient-to-r from-[#FFB84D] to-[#A0E97C] hover:from-[#FFCA6F] hover:to-[#B3F095]
+                shadow-2xl transition-all transform hover:scale-105">
+                <i class="fab fa-whatsapp text-4xl"></i>
+            Message me on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <!-- Right: Chat Mockup (Kept exactly as you loved) -->
+        <div class="flex justify-center md:justify-end">
+    <div class="relative w-full max-w-md md:max-w-xl lg:max-w-2xl">
+        <div class="neon-card p-6 md:p-8 rounded-2xl transform rotate-3 shadow-2xl">
+            <div class="flex items-center mb-4 justify-between">
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <i class="fas fa-cog text-primary animate-spin-slow"></i>
+            </div>
+            <div class="space-y-5 md:space-y-6">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-robot text-primary text-lg md:text-xl"></i>
+                    </div>
+                    <div class="bg-darker rounded-lg p-3 md:p-4 flex-1 border border-gray-800">
+                        <p class="text-sm md:text-base">Welcome! I can help automate your workflows.</p>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-user text-primary text-lg md:text-xl"></i>
+                    </div>
+                    <div class="bg-darker border border-gray-800 rounded-lg p-3 md:p-4 flex-1">
+                        <p class="text-sm md:text-base">How can you help my e-commerce business?</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-robot text-primary text-lg md:text-xl"></i>
+                    </div>
+                    <div class="bg-gradient-to-r from-primary to-secondary text-white rounded-lg p-3 md:p-4 flex-1">
+                        <p class="text-sm md:text-base font-medium">I can automate inventory, customer service, and marketing!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating icons (scaled up a bit too) -->
+        <div class="absolute -top-6 -right-6 w-20 h-20 md:w-24 md:h-24 bg-primary/10 rounded-full flex items-center justify-center animate-float">
+            <i class="fas fa-cogs text-primary text-3xl md:text-4xl"></i>
+        </div>
+        <div class="absolute -bottom-6 -left-6 w-16 h-16 md:w-20 md:h-20 bg-secondary/10 rounded-full flex items-center justify-center animate-float" style="animation-delay: 2s;">
+            <i class="fas fa-bolt text-secondary text-2xl md:text-3xl"></i>
+        </div>
+    </div>
+</div>
+
+                <!-- Floating icons -->
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center animate-float">
+                    <i class="fas fa-cogs text-primary text-2xl"></i>
+                </div>
+                <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center animate-float" style="animation-delay: 2s;">
+                    <i class="fas fa-bolt text-secondary text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Remove everything from here down (Services, Stats, etc.) if you want a single-page hero-only version -->
+<!-- Or keep the rest (About, Contact, Footer) if you still want them -->
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-darker/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">What I actually do (no fluff)</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Helping businesses save thousands of hours with automation.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card rounded-2xl p-6">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instagram DM Automation</h3>
+                    <p class="text-gray-400 mb-4">
+                        I take your Instagram DMs and auto-reply + log them to Google Sheets or any database so you never miss a lead again.
+                    </p>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card rounded-2xl p-6">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-secondary to-primary flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">WhatsApp Order Flows</h3>
+                    <p class="text-gray-400 mb-4">
+                        New order on Instagram → auto-message on WhatsApp → details saved in Sheet. You just pack and ship.
+                    </p>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card rounded-2xl p-6">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-6">
+                        <i class="fas fa-cloud text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">24-hour Delivery</h3>
+                    <p class="text-gray-400 mb-4">
+                        One clear price: ₹3,999 one-time or ₹4,999/month. I deliver in 24 hrs. If it doesn't work exactly as shown → full refund, no questions. Just forget me. 
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center">
+                <div class="flex flex-col items-center justify-center h-full">
+                    <h3 class="text-2xl font-semibold mb-3">Early Stage</h3>
+                    <p class="text-orange-100 text-sm max-w-[180px]">Building, Testing, Evolving</p>
+                </div>
+                <div class="flex flex-col items-center justify-center h-full">
+                    <h3 class="text-2xl font-semibold mb-3">Learning Everyday</h3>
+                    <p class="text-orange-100 text-sm max-w-[180px]">From Calls to Code</p>
+                </div>
+                <div class="flex flex-col items-center justify-center h-full">
+                    <h3 class="text-2xl font-semibold mb-3">Driven by Curiosity</h3>
+                    <p class="text-orange-100 text-sm max-w-[180px]">Exploring What's Next</p>
+                </div>
+                <div class="flex flex-col items-center justify-center h-full">
+                    <h3 class="text-2xl font-semibold mb-3">Infinite Infinitus</h3>
+                    <p class="text-orange-100 text-sm max-w-[180px]">Endless Possibilities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <!-- About Section -->
+<section id="about" class="py-24 md:py-32 bg-darker/80 backdrop-blur-sm">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        
+        <!-- Left: My Journey So Far -->
+        <div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-8">
+                My Journey So Far
+            </h2>
+            <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                I’m <span class="text-primary font-semibold">V J</span> — a 19-year-old CSE student at SOE, CUSAT.<br><br>
+                A year ago I was trying (and failing) at crypto, dropshipping, and everything else everyone was doing.<br><br>
+                Now I’m finally building real things: a funded drone project with my team and simple Instagram to WhatsApp automations for D2C brands.
+            </p>
+        </div>
+
+        <!-- Right: Why I Do This + Pricing Card -->
+        <div class="flex justify-center md:justify-start">
+            <div class="neon-card rounded-2xl p-8 md:p-10 max-w-lg w-full">
+                <h3 class="text-2xl md:text-3xl font-bold mb-6 text-primary">
+                    Why I Do This
+                </h3>
+                <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+                    I know how painful it is when leads slip because DMs pile up.<br><br>
+                    I fix that in <strong>24 hours</strong> for <strong>₹3,999 (one-time)</strong> or <strong>₹4,999/month</strong>.<br><br>
+                    If it doesn’t work exactly as promised — <span class="text-primary font-bold">full refund, no questions.</span> Just forget me.
+                </p>
+
+                <!-- Optional honest bottom line -->
+                <div class="mt-10 pt-8 border-t border-gray-700 text-center">
+                    <p class="text-gray-400 text-sm md:text-base">
+                        Zero clients yet, but 100% focused on delivering for the next one.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Contact/Lead Form Section -->
+    <section id="contact" class="py-16 bg-darker/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto neon-card rounded-2xl overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/2 bg-gradient-to-br from-primary to-secondary p-8 text-white">
+                        <h2 class="text-3xl font-bold mb-6">Start Your Automation Journey</h2>
+                        <p class="mb-8">
+                            Let's discuss how we can help automate your business processes. 
+                            Fill out this form and we'll get back to you within 24 hours.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <p>Free consultation</p>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <p>No obligation quote</p>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <p>Customized solution</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2 p-8">
+                        <form id="leadForm" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-gray-300 mb-2">Full Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 neon-input rounded-lg focus:outline-none" required>
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-gray-300 mb-2">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 neon-input rounded-lg focus:outline-none" required>
+                            </div>
+                            
+                            <div>
+                                <label for="company" class="block text-gray-300 mb-2">Company</label>
+                                <input type="text" id="company" class="w-full px-4 py-3 neon-input rounded-lg focus:outline-none">
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-gray-300 mb-2">How can we help?</label>
+                                <textarea id="message" rows="3" class="w-full px-4 py-3 neon-input rounded-lg focus:outline-none"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full neon-button text-white py-3 rounded-lg font-medium flex items-center justify-center">
+                                Start Automation Journey
+                                <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-12 border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary infinity-logo"></div>
+                        <span class="text-xl font-bold">Infinitus</span>
+                    </div>
+                    <p class="text-gray-400">Creating infinite possibilities through automation</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2025 Infinitus. All rights reserved hehe.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create the starry night background with infinity signs
+    function createStarryNight() {
+    const starryNight = document.getElementById('starryNight');
+    const numberOfStars = 100;
+    
+    for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'infinity-star';
+        star.innerHTML = '∞';                 // ← FIXED
+        
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        
+        star.style.left = `${left}%`;
+        star.style.top = `${top}%`;
+        
+        const delay = Math.random() * 3;
+        star.style.animationDelay = `${delay}s`;
+        
+        starryNight.appendChild(star);
+    }
+}
+
+    // Enhanced floating infinities
+    function createFloatingInfinities() {
+    const container = document.querySelector('.starry-night') || document.body;
+    const count = 80;
+    const colors = ['orange', 'red', 'white'];
+    const sizes = ['small', 'medium', 'large'];
+
+    for (let i = 0; i < count; i++) {
+        const infinity = document.createElement('div');
+        infinity.className = 'infinity-float';
+        infinity.innerHTML = '∞';             // ← FIXED
+
+        infinity.style.left = `${Math.random() * 100}%`;
+
+        const delay = Math.random() * 8;
+        infinity.style.animationDelay = `${delay}s, ${delay * 0.8}s, ${delay * 1.2}s`;
+
+        const duration = 6 + Math.random() * 6;
+        infinity.style.animationDuration = `${duration}s, 3s, ${duration * 0.75}s`;
+
+        const colorClass = colors[Math.floor(Math.random() * colors.length)];
+        infinity.classList.add(colorClass);
+
+        const sizeClass = sizes[Math.floor(Math.random() * sizes.length)];
+        if (sizeClass !== 'medium') infinity.classList.add(sizeClass);
+
+        container.appendChild(infinity);
+    }
+}
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            createStarryNight();
+            createFloatingInfinities();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+      (function(d, t) {
+          var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+          v.onload = function() {
+            window.voiceflow.chat.load({
+              verify: { projectID: '68cbf0d6d4b73f0bb089ef5d' },
+              url: 'https://general-runtime.voiceflow.com',
+              versionID: 'production',
+              voice: {
+                url: "https://runtime-api.voiceflow.com"
+              }
+            });
+          }
+          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+      })(document, 'script');
+    </script>
+</body>
+</html>

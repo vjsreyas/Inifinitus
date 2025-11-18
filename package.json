@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.4.0",
+    "tailwind": "^2.3.1",
+    "three": "^0.181.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
